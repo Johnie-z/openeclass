@@ -17,7 +17,11 @@ $app->map('/login', RequestAccessToken)->via('POST');
 require_once (__DIR__.'/courses.php');
 $app->map('/courses', GetCourses)->via('GET');
 $app->map('/courses', PostCourses)->via('POST');
-$app->map('/courses', DeleteCourses)->via('DELETE');
+$app->map('/courses', function() use($app) {
+	//Getting the parameter which is suppossed to be delivered via the Delete/Unenroll button
+	$course_id = $app -> request() -> params(/*param_name id in here*/);
+	DeleteCourses($course_id);
+  })->via('DELETE');
 // 404 not found
 $app->notFound(function () { echo json_encode(array('status' => 'NOT_FOUND')); });
 
